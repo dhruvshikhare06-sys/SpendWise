@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SpendWise personal finance and expense management dashboard" />
+  <title>SpendWise — Personal Finance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" id="brandHome" aria-label="SpendWise home">
+        <span class="brand-mark"><i class="fa-solid fa-wallet"></i></span>
+        <span>Spend<span class="brand-accent">Wise</span></span>
+      </a>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="main-nav">
+        <button class="nav-item active" data-view="dashboard"><i class="fa-solid fa-grid-2"></i><span>Overview</span></button>
+        <button class="nav-item" data-view="import"><i class="fa-solid fa-file-import"></i><span>Import statement</span></button>
+        <button class="nav-item" data-view="transactions"><i class="fa-solid fa-arrow-right-arrow-left"></i><span>Transactions</span></button>
+        <button class="nav-item" data-view="analytics"><i class="fa-solid fa-chart-pie"></i><span>Analytics</span></button>
+        <button class="nav-item" data-view="budgets"><i class="fa-solid fa-wallet"></i><span>Budgets</span></button>
+        <button class="nav-item" data-view="goals"><i class="fa-solid fa-bullseye"></i><span>Savings goals</span></button>
+        <button class="nav-item" data-view="recurring"><i class="fa-solid fa-repeat"></i><span>Recurring</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card">
+          <div class="help-icon"><i class="fa-regular fa-lightbulb"></i></div>
+          <strong>Small steps add up.</strong>
+          <p>Build better money habits, one transaction at a time.</p>
+        </div>
+        <button class="nav-item" data-view="settings"><i class="fa-solid fa-gear"></i><span>Settings & data</span></button>
+        <div class="profile-row">
+          <div class="avatar">SW</div>
+          <div><strong>My Workspace</strong><small>Personal account</small></div>
+          <button class="profile-menu-button" id="profileMenuBtn" type="button" aria-label="Manage profiles" title="Manage profiles"><i class="fa-solid fa-ellipsis"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button mobile-menu" id="menuBtn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <div class="eyebrow" id="todayLabel">PERSONAL FINANCE</div>
+            <h1 id="pageTitle">Overview</h1>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+          <button class="icon-button notification-btn" id="alertsBtn" title="View alerts" aria-label="View alerts"><i class="fa-regular fa-bell"></i><span class="notification-dot"></span></button>
+          <button class="primary-button" id="quickAdd"><i class="fa-solid fa-plus"></i><span> Add transaction</span></button>
+        </div>
+      </header>
+
+      <section class="view active" id="view-dashboard">
+        <div class="welcome-row">
+          <div><h2>Good money habits start here<span class="green-dot">.</span></h2><p>Here's a snapshot of your financial activity.</p></div>
+          <div class="header-tools"><label class="currency-chip"><i class="fa-solid fa-coins"></i><select id="reportCurrency" aria-label="Reporting currency"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option><option>CAD</option><option>AUD</option></select></label><div class="date-chip"><i class="fa-regular fa-calendar"></i><span id="currentDate"></span></div></div>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card balance-card">
+            <div class="stat-top"><span>Total balance</span><span class="stat-icon"><i class="fa-solid fa-wallet"></i></span></div>
+            <div class="stat-value" id="totalBalance">₹0</div>
+            <div class="stat-foot"><span class="trend neutral"><i class="fa-solid fa-circle-info"></i> Current balance</span><span class="muted">Income − expenses</span></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Total income</span><span class="stat-icon income-icon"><i class="fa-solid fa-arrow-down"></i></span></div>
+            <div class="stat-value" id="totalIncome">₹0</div>
+            <div class="stat-foot"><span class="trend positive"><i class="fa-solid fa-arrow-trend-up"></i> Money in</span><span class="muted">All recorded</span></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Total expenses</span><span class="stat-icon expense-icon"><i class="fa-solid fa-arrow-up"></i></span></div>
+            <div class="stat-value" id="totalExpense">₹0</div>
+            <div class="stat-foot"><span class="trend negative"><i class="fa-solid fa-arrow-trend-down"></i> Money out</span><span class="muted">All recorded</span></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Savings rate</span><span class="stat-icon savings-icon"><i class="fa-solid fa-piggy-bank"></i></span></div>
+            <div class="stat-value" id="savingsRate">0%</div>
+            <div class="stat-foot"><span class="trend positive"><i class="fa-solid fa-chart-line"></i> Income saved</span><span class="muted">Overall</span></div>
+          </article>
+        </div>
+
+        <div class="content-grid dashboard-grid">
+          <article class="panel chart-panel">
+            <div class="panel-heading"><div><h3>Cash flow</h3><p>Income and expenses over time</p></div><select id="cashflowRange" class="select-control"><option value="6">Last 6 months</option><option value="3">Last 3 months</option><option value="12">Last 12 months</option></select></div>
+            <div class="chart-wrap"><canvas id="cashflowChart"></canvas></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><h3>Spending breakdown</h3><p>Where your money goes</p></div><button class="text-button" data-go="analytics">Details <i class="fa-solid fa-arrow-right"></i></button></div>
+            <div class="donut-wrap"><canvas id="categoryChart"></canvas><div class="donut-center"><strong id="donutTotal">₹0</strong><small>Total spent</small></div></div>
+            <div class="legend-list" id="categoryLegend"></div>
+          </article>
+        </div>
+        <div class="content-grid lower-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><h3>Recent transactions</h3><p>Your latest money movements</p></div><button class="text-button" data-go="transactions">View all <i class="fa-solid fa-arrow-right"></i></button></div>
+            <div id="recentTransactions"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><h3>Budget progress</h3><p>This month's spending limits</p></div><button class="text-button" data-go="budgets">Manage <i class="fa-solid fa-arrow-right"></i></button></div>
+            <div id="budgetPreview" class="budget-preview"></div>
+          </article>
+        </div>
+      </section>
+
+
+      <section class="view" id="view-import">
+        <div class="section-intro"><div><h2>Import statement</h2><p>Bring your bank transactions into SpendWise in a few steps.</p></div><button class="secondary-button" id="downloadSampleCsv"><i class="fa-solid fa-download"></i> Sample CSV</button></div>
+        <div class="import-layout">
+          <article class="panel import-upload-panel">
+            <div class="upload-icon"><i class="fa-solid fa-file-csv"></i></div>
+            <h3>Upload a bank statement</h3>
+            <p>Choose a CSV file exported from your bank or payment app. Your file is processed locally in this browser.</p>
+            <label class="primary-button upload-button"><i class="fa-solid fa-cloud-arrow-up"></i> Choose CSV file<input type="file" id="csvFileInput" accept=".csv,text/csv" hidden></label>
+            <div class="upload-hint">CSV format · No bank login or credentials required</div>
+          </article>
+          <article class="panel import-steps">
+            <h3>How importing works</h3>
+            <div class="import-step"><span>1</span><div><strong>Upload</strong><small>Select a CSV statement from your device.</small></div></div>
+            <div class="import-step"><span>2</span><div><strong>Review</strong><small>Check detected columns, amounts and categories.</small></div></div>
+            <div class="import-step"><span>3</span><div><strong>Import</strong><small>Confirm to add transactions and refresh your insights.</small></div></div>
+          </article>
+        </div>
+        <article class="panel import-preview-panel hidden" id="importPreviewPanel">
+          <div class="panel-heading"><div><h3>Review imported transactions</h3><p id="importSummary">Preview before saving</p></div><button class="text-button" id="cancelImport">Discard file</button></div>
+          <div class="mapping-grid">
+            <label>Date column<select id="mapDate" class="select-control"></select></label>
+            <label>Description column<select id="mapDescription" class="select-control"></select></label>
+            <label>Amount column<select id="mapAmount" class="select-control"></select></label>
+            <label>Debit column (optional)<select id="mapDebit" class="select-control"></select></label>
+            <label>Credit column (optional)<select id="mapCredit" class="select-control"></select></label>
+            <label>Currency column (optional)<select id="mapCurrency" class="select-control"></select></label><label>Type column (optional)<select id="mapType" class="select-control"></select></label>
+          </div>
+          <div class="import-notice"><i class="fa-solid fa-circle-info"></i> Use either one signed Amount column, or separate Debit and Credit columns. If no currency column exists, your reporting currency will be used.</div>
+          <div class="table-scroll"><table><thead><tr><th>DATE</th><th>DESCRIPTION</th><th>TYPE</th><th>CATEGORY</th><th class="align-right">AMOUNT</th><th>CURRENCY</th></tr></thead><tbody id="importPreviewRows"></tbody></table></div>
+          <div class="import-footer"><span id="importDuplicateNote" class="muted"></span><button class="primary-button" id="confirmImport"><i class="fa-solid fa-check"></i> Import transactions</button></div>
+        </article>
+        <div class="import-privacy"><i class="fa-solid fa-shield-halved"></i><span><strong>Privacy first.</strong> SpendWise reads the selected CSV in your browser. The file is not sent to a SpendWise server. Avoid importing full account numbers or other sensitive columns.</span></div>
+      </section>
+
+      <section class="view" id="view-transactions">
+        <div class="section-intro"><div><h2>Transactions</h2><p>Keep every rupee accounted for.</p></div><button class="primary-button" id="addTransactionPage"><i class="fa-solid fa-plus"></i> Add transaction</button></div>
+        <div class="filter-bar">
+          <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="transactionSearch" placeholder="Search transactions..." /></div>
+          <select id="typeFilter" class="select-control"><option value="all">All types</option><option value="expense">Expenses</option><option value="income">Income</option></select>
+          <select id="categoryFilter" class="select-control"><option value="all">All categories</option></select>
+          <select id="sortFilter" class="select-control"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="highest">Highest amount</option><option value="lowest">Lowest amount</option></select>
+        </div>
+        <article class="panel table-panel"><div class="table-summary" id="transactionSummary"></div><div class="table-scroll"><table><thead><tr><th>TRANSACTION</th><th>CATEGORY</th><th>DATE</th><th>TYPE</th><th class="align-right">AMOUNT</th><th></th></tr></thead><tbody id="transactionTable"></tbody></table></div><div class="empty-state hidden" id="transactionEmpty"><i class="fa-regular fa-folder-open"></i><strong>No transactions found</strong><span>Try changing your filters or add a transaction.</span></div></article>
+      </section>
+
+      <section class="view" id="view-analytics">
+        <div class="section-intro"><div><h2>Analytics</h2><p>Understand your spending patterns and cash flow.</p></div><select id="analyticsPeriod" class="select-control"><option value="month">This month</option><option value="all">All time</option></select></div>
+        <div class="stats-grid compact-stats">
+          <article class="stat-card"><div class="stat-top"><span>Income</span><span class="stat-icon income-icon"><i class="fa-solid fa-arrow-down"></i></span></div><div class="stat-value" id="analyticsIncome">₹0</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Expenses</span><span class="stat-icon expense-icon"><i class="fa-solid fa-arrow-up"></i></span></div><div class="stat-value" id="analyticsExpense">₹0</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Net savings</span><span class="stat-icon savings-icon"><i class="fa-solid fa-piggy-bank"></i></span></div><div class="stat-value" id="analyticsSavings">₹0</div></article>
+        </div>
+        <div class="content-grid">
+          <article class="panel"><div class="panel-heading"><div><h3>Expenses by category</h3><p>Category distribution</p></div></div><div class="chart-wrap tall"><canvas id="analyticsCategoryChart"></canvas></div></article>
+          <article class="panel"><div class="panel-heading"><div><h3>Income vs expenses</h3><p>Monthly comparison</p></div></div><div class="chart-wrap tall"><canvas id="analyticsFlowChart"></canvas></div></article>
+        </div>
+        <article class="panel insight-panel"><div class="insight-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><div><h3>Spending insight</h3><p id="spendingInsight">Add a few transactions to see a personalized spending insight.</p></div></article>
+      </section>
+
+      <section class="view" id="view-budgets">
+        <div class="section-intro"><div><h2>Budgets</h2><p>Set limits and stay in control of your spending.</p></div><button class="primary-button" id="addBudgetBtn"><i class="fa-solid fa-plus"></i> Create budget</button></div>
+        <div class="budget-overview" id="budgetOverview"></div>
+        <div class="budget-grid" id="budgetGrid"></div>
+        <div class="empty-state hidden panel" id="budgetEmpty"><i class="fa-solid fa-wallet"></i><strong>No budgets yet</strong><span>Create a category budget to start tracking your limits.</span><button class="primary-button" id="emptyAddBudget">Create your first budget</button></div>
+      </section>
+
+      <section class="view" id="view-goals">
+        <div class="section-intro"><div><h2>Savings goals</h2><p>Give your savings a purpose and track your progress.</p></div><button class="primary-button" id="addGoalBtn"><i class="fa-solid fa-plus"></i> New goal</button></div>
+        <div class="goal-banner"><div><span class="eyebrow">YOUR FUTURE, PLANNED</span><h2>Every little contribution moves you closer.</h2><p>Create a goal, add savings and celebrate your progress.</p></div><div class="goal-banner-icon"><i class="fa-solid fa-bullseye"></i></div></div>
+        <div class="goal-grid" id="goalGrid"></div>
+        <div class="empty-state hidden panel" id="goalEmpty"><i class="fa-solid fa-flag-checkered"></i><strong>No savings goals yet</strong><span>Start with something you're excited to save for.</span></div>
+      </section>
+
+      <section class="view" id="view-recurring">
+        <div class="section-intro"><div><h2>Recurring expenses</h2><p>Keep track of regular bills and subscriptions.</p></div><button class="primary-button" id="addRecurringBtn"><i class="fa-solid fa-plus"></i> Add recurring</button></div>
+        <div class="info-banner"><i class="fa-solid fa-circle-info"></i><span>Recurring items are reminders and forecasts. They do not automatically create transactions or charge money.</span></div>
+        <article class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>NAME</th><th>CATEGORY</th><th>FREQUENCY</th><th>NEXT DATE</th><th class="align-right">AMOUNT</th><th></th></tr></thead><tbody id="recurringTable"></tbody></table></div><div class="empty-state hidden" id="recurringEmpty"><i class="fa-solid fa-repeat"></i><strong>No recurring items</strong><span>Add rent, subscriptions or regular bills to keep them visible.</span></div></article>
+      </section>
+
+      <section class="view" id="view-settings">
+        <div class="section-intro"><div><h2>Settings & data</h2><p>Personalize your workspace and manage your information.</p></div></div>
+        <div class="settings-grid">
+          <article class="panel settings-card"><div class="settings-icon"><i class="fa-solid fa-palette"></i></div><div><h3>Appearance</h3><p>Choose the theme that feels right for you.</p><div class="setting-actions"><button class="secondary-button" id="lightTheme">Light mode</button><button class="secondary-button" id="darkTheme">Dark mode</button></div></div></article>
+          <article class="panel settings-card"><div class="settings-icon"><i class="fa-solid fa-flask"></i></div><div><h3>Demo data</h3><p>Load realistic sample transactions for demonstrations, or remove only the sample records.</p><div class="setting-actions"><button class="secondary-button" id="loadDemoData"><i class="fa-solid fa-wand-magic-sparkles"></i> Load demo data</button><button class="secondary-button" id="clearDemoData">Clear demo data</button></div></div></article>
+          <article class="panel settings-card"><div class="settings-icon"><i class="fa-solid fa-file-export"></i></div><div><h3>Export transactions</h3><p>Download your transaction records as a CSV file.</p><button class="secondary-button" id="exportCsv"><i class="fa-solid fa-download"></i> Export CSV</button></div></article>
+          <article class="panel settings-card"><div class="settings-icon"><i class="fa-solid fa-cloud-arrow-down"></i></div><div><h3>Backup your data</h3><p>Export or restore your SpendWise data as a JSON backup.</p><div class="setting-actions"><button class="secondary-button" id="exportJson"><i class="fa-solid fa-download"></i> Backup</button><label class="secondary-button file-label"><i class="fa-solid fa-upload"></i> Restore<input type="file" id="importJson" accept=".json,application/json" hidden></label></div></div></article>
+          <article class="panel settings-card danger-card"><div class="settings-icon"><i class="fa-solid fa-trash-can"></i></div><div><h3>Reset workspace</h3><p>Delete all locally stored transactions, budgets, goals and recurring items.</p><button class="danger-button" id="resetData">Reset all data</button></div></article>
+        </div>
+        <div class="storage-note"><i class="fa-solid fa-shield-halved"></i><div><strong>Your data stays in this browser</strong><p>SpendWise uses localStorage. Clearing browser site data may remove your records, so use the backup feature regularly. This demo does not use a cloud account or server. Multiple currencies are stored separately; totals and charts are filtered by the selected reporting currency rather than converted using guessed exchange rates.</p></div></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><div><span class="eyebrow">SPENDWISE WORKSPACE</span><h2 id="modalTitle">Add transaction</h2></div><button class="icon-button" id="closeModal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+      <form id="transactionForm">
+        <input type="hidden" id="editId">
+        <div class="form-row"><label>Transaction type</label><div class="segmented"><button type="button" class="segment active" data-kind="expense">Expense</button><button type="button" class="segment" data-kind="income">Income</button></div><input type="hidden" id="transactionType" value="expense"></div>
+        <div class="form-row"><label for="transactionTitle">Title</label><input id="transactionTitle" required maxlength="60" placeholder="e.g. Grocery shopping"></div>
+        <div class="form-two"><div class="form-row"><label for="transactionAmount">Amount</label><input id="transactionAmount" type="number" min="0.01" step="0.01" required placeholder="0.00"></div><div class="form-row"><label for="transactionCurrency">Currency</label><select id="transactionCurrency"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option><option>CAD</option><option>AUD</option></select></div></div><div class="form-row"><label for="transactionDate">Date</label><input id="transactionDate" type="date" required></div>
+        <div class="form-two"><div class="form-row"><label for="transactionCategory">Category</label><select id="transactionCategory" required></select></div><div class="form-row"><label for="transactionNote">Note (optional)</label><input id="transactionNote" maxlength="100" placeholder="Add a note"></div></div>
+        <div class="modal-actions"><button type="button" class="secondary-button" id="cancelModal">Cancel</button><button type="submit" class="primary-button"><i class="fa-solid fa-check"></i> Save transaction</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="budgetModalBackdrop">
+    <div class="modal small-modal" role="dialog" aria-modal="true">
+      <div class="modal-header"><div><span class="eyebrow">BUDGET PLANNER</span><h2 id="budgetModalTitle">Create budget</h2></div><button class="icon-button" id="closeBudgetModal"><i class="fa-solid fa-xmark"></i></button></div>
+      <form id="budgetForm"><input type="hidden" id="budgetEditId"><div class="form-row"><label for="budgetCategory">Category</label><select id="budgetCategory" required></select></div><div class="form-row"><label for="budgetAmount">Monthly limit (₹)</label><input type="number" id="budgetAmount" min="1" required placeholder="e.g. 5000"></div><div class="modal-actions"><button type="button" class="secondary-button" id="cancelBudget">Cancel</button><button class="primary-button" type="submit">Save budget</button></div></form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="goalModalBackdrop">
+    <div class="modal small-modal" role="dialog" aria-modal="true">
+      <div class="modal-header"><div><span class="eyebrow">SAVINGS PLAN</span><h2 id="goalModalTitle">Create savings goal</h2></div><button class="icon-button" id="closeGoalModal"><i class="fa-solid fa-xmark"></i></button></div>
+      <form id="goalForm"><input type="hidden" id="goalEditId"><div class="form-row"><label for="goalName">Goal name</label><input id="goalName" required maxlength="50" placeholder="e.g. New laptop"></div><div class="form-two"><div class="form-row"><label for="goalTarget">Target amount (₹)</label><input id="goalTarget" type="number" min="1" required></div><div class="form-row"><label for="goalSaved">Already saved (₹)</label><input id="goalSaved" type="number" min="0" value="0" required></div></div><div class="form-row"><label for="goalDate">Target date (optional)</label><input id="goalDate" type="date"></div><div class="modal-actions"><button type="button" class="secondary-button" id="cancelGoal">Cancel</button><button class="primary-button" type="submit">Save goal</button></div></form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="recurringModalBackdrop">
+    <div class="modal small-modal" role="dialog" aria-modal="true">
+      <div class="modal-header"><div><span class="eyebrow">REPEAT REMINDER</span><h2>Add recurring item</h2></div><button class="icon-button" id="closeRecurringModal"><i class="fa-solid fa-xmark"></i></button></div>
+      <form id="recurringForm"><div class="form-row"><label for="recurringName">Name</label><input id="recurringName" required maxlength="50" placeholder="e.g. Music subscription"></div><div class="form-two"><div class="form-row"><label for="recurringAmount">Amount (₹)</label><input id="recurringAmount" type="number" min="1" required></div><div class="form-row"><label for="recurringFrequency">Frequency</label><select id="recurringFrequency"><option>Monthly</option><option>Weekly</option><option>Yearly</option></select></div></div><div class="form-two"><div class="form-row"><label for="recurringCategory">Category</label><select id="recurringCategory"></select></div><div class="form-row"><label for="recurringDate">Next date</label><input id="recurringDate" type="date" required></div></div><div class="modal-actions"><button type="button" class="secondary-button" id="cancelRecurring">Cancel</button><button class="primary-button" type="submit">Save reminder</button></div></form>
+    </div>
+  </div>
+
+
+  <div class="modal-backdrop hidden" id="profileModalBackdrop">
+    <div class="modal small-modal profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+      <div class="modal-header">
+        <div><span class="eyebrow">LOCAL WORKSPACE</span><h2 id="profileModalTitle">Manage profiles</h2></div>
+        <button class="icon-button" id="closeProfileModal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="profileForm">
+        <input type="hidden" id="profileFormMode" value="edit">
+        <div class="form-row"><label for="profileNameInput">Profile name</label><input id="profileNameInput" required maxlength="40" placeholder="e.g. Personal"></div>
+        <div class="form-row"><label for="profileEmailInput">Email or description (optional)</label><input id="profileEmailInput" maxlength="70" placeholder="e.g. personal workspace"></div>
+        <div class="modal-actions profile-form-actions">
+          <button type="button" class="secondary-button hidden" id="cancelNewProfile">Cancel</button>
+          <button class="primary-button" type="submit" id="saveProfileBtn"><i class="fa-solid fa-floppy-disk"></i> Save profile</button>
+        </div>
+      </form>
+      <div class="profile-list-heading"><strong>Saved on this PC</strong><button type="button" class="text-button" id="newProfileBtn"><i class="fa-solid fa-plus"></i> New profile</button></div>
+      <div class="profile-list" id="profileList"></div>
+      <p class="profile-local-note"><i class="fa-solid fa-lock"></i> Profiles and their finance data are stored only in this browser on this PC. They are not online accounts and do not sync to other devices.</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastText">Saved</span></div>
+  <script src="app.js"></script>
+</body>
+</html>
